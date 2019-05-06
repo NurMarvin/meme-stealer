@@ -49,7 +49,7 @@ module.exports = class MemeStealer extends Plugin {
             return res;
           };
       
-          inject('pc-meme-stealer-imageContext', MessageContextMenu.prototype, 'render', handleImageContext);
+          inject('meme-stealer-imageContext', MessageContextMenu.prototype, 'render', handleImageContext);
     }
 
     getExtension (url) {
@@ -68,6 +68,6 @@ module.exports = class MemeStealer extends Plugin {
     }
 
     pluginWillUnload () {
-        uninject('pc-meme-stealer-imageContext');
+        uninject('meme-stealer-imageContext');
     }
 }
