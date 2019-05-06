@@ -14,12 +14,13 @@ module.exports = class MemeStealer extends Plugin {
 
     async injectMemeStealer() {
         const stealMeme = async (target) => {
-            const nativeImage = require('electron').nativeImage
-            let match = /(https?):\/\/(?:([\w-]+)\.)?([\w-]+)\.(\w+)((?:\/[\w-]+)*\/)([\w-]+)+\.([\w]+)/.exec(target.src)
+            let regex = /(https?):\/\/(?:([\w-]+)\.)?([\w-]+)\.(\w+)((?:\/[\w-]+)*\/)([\w-]+)+\.([\w]+)/
+            let match = regex.exec(target.src)
             let cdnUrl = `https://cdn.discordapp.com${match[5] + match[6]}.${match[7]}`
+            const nativeImage = require('electron').nativeImage
             let dataURL = await this.getImageEncoded(cdnUrl)
             let image = nativeImage.createFromDataURL(dataURL);
-            
+
             clipboard.writeImage(image)
         };
 
@@ -39,7 +40,7 @@ module.exports = class MemeStealer extends Plugin {
               res.props.children.push(
                 React.createElement(Button, {
                   name: 'Steal Meme',
-                  seperate: false,
+                  seperate: true,
                   onClick: () => stealMeme(target)
                 })
               );
@@ -56,13 +57,17 @@ module.exports = class MemeStealer extends Plugin {
     }
     
     async getImageEncoded (imageUrl) {
-        const extension = this.getExtension(imageUrl);
+        let extension = this.getExtension(imageUrl);
         const { raw } = await get(imageUrl);
+
+        if(extension === 'jpg') {
+            extension = 'jpeg';
+        }
     
         return `data:image/${extension};base64,${raw.toString('base64')}`;
     }
 
     pluginWillUnload () {
         uninject('pc-meme-stealer-imageContext');
-      }
+    }
 }
