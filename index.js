@@ -1,6 +1,6 @@
 const { Plugin } = require('powercord/entities');
 const { ContextMenu: { Button } } = require('powercord/components');
-const { getModuleByDisplayName, React } = require('powercord/webpack');
+const { getModuleByDisplayName, getModule, React } = require('powercord/webpack');
 const { inject, uninject } = require('powercord/injector');
 const { clipboard } = require('electron')
 const { extname } = require('path');
@@ -28,8 +28,9 @@ module.exports = class MemeStealer extends Plugin {
       
         inject('meme-stealer-imageContext', MessageContextMenu.prototype, 'render', function (args, res) {
             const { target } = this.props;
+            const { imageWrapper } = getModule([ 'imageWrapper' ], false);
       
-            if (target.tagName.toLowerCase() === 'img' && target.parentElement.classList.contains('imageWrapper-2p5ogY')) {
+            if (target.tagName.toLowerCase() === 'img' && target.parentElement.classList.contains(imageWrapper)) {
               if (typeof res.props.children === 'object') {
                 const children = [];
                 children.push(res.props.children);
