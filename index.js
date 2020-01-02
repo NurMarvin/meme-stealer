@@ -25,11 +25,11 @@ module.exports = class MemeStealer extends Plugin {
         };
 
         const MessageContextMenu = await getModuleByDisplayName('MessageContextMenu');
-
-        const handleImageContext = function (args, res) {
+      
+        inject('meme-stealer-imageContext', MessageContextMenu.prototype, 'render', function (args, res) {
             const { target } = this.props;
       
-            if (target.tagName.toLowerCase() === 'img' && target.parentElement.classList.contains('pc-imageWrapper')) {
+            if (target.tagName.toLowerCase() === 'img' && target.parentElement.classList.contains('imageWrapper-2p5ogY')) {
               if (typeof res.props.children === 'object') {
                 const children = [];
                 children.push(res.props.children);
@@ -47,9 +47,7 @@ module.exports = class MemeStealer extends Plugin {
             }
       
             return res;
-          };
-      
-          inject('meme-stealer-imageContext', MessageContextMenu.prototype, 'render', handleImageContext);
+          });
     }
 
     getExtension (url) {
